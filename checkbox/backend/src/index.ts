@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(express.raw({ type: "application/vnd.custom-type" }));
 app.use(express.text({ type: "text/html" }));
 
-app.get("/todos", async (req, res) => {
+app.get("/task", async (req, res) => {
   const todos = await prisma.todo.findMany({
     orderBy: { createdAt: "desc" },
   });
@@ -18,7 +18,7 @@ app.get("/todos", async (req, res) => {
   res.json(todos);
 });
 
-app.post("/todos", async (req, res) => {
+app.post("/task", async (req, res) => {
   const todo = await prisma.todo.create({
     data: {
       completed: false,
@@ -30,7 +30,7 @@ app.post("/todos", async (req, res) => {
   return res.json(todo);
 });
 
-app.get("/todos/:id", async (req, res) => {
+app.get("/task/:id", async (req, res) => {
   const id = req.params.id;
   const todo = await prisma.todo.findUnique({
     where: { id },
@@ -39,7 +39,7 @@ app.get("/todos/:id", async (req, res) => {
   return res.json(todo);
 });
 
-app.put("/todos/:id", async (req, res) => {
+app.put("/task/:id", async (req, res) => {
   const id = req.params.id;
   const todo = await prisma.todo.update({
     where: { id },
@@ -49,7 +49,7 @@ app.put("/todos/:id", async (req, res) => {
   return res.json(todo);
 });
 
-app.delete("/todos/:id", async (req, res) => {
+app.delete("/task/:id", async (req, res) => {
   const id = req.params.id;
   await prisma.todo.delete({
     where: { id },

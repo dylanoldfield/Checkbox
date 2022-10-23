@@ -1,5 +1,5 @@
 import React from 'react';
-import { TaskStatus} from '../components/TaskRow';
+import { TaskFields, TaskStatus} from '../components/TaskRow';
 import { SortDirection} from '../components/TaskHeader'
 import TaskRow from '../components/TaskRow'
 import TaskHeader from '../components/TaskHeader';
@@ -84,6 +84,10 @@ function TaskList() {
     const handleSort = (title:string, sortDir: SortDirection) => {
 
     }
+
+    const savedRow = (data:TaskFields) => {
+        console.log('row saved')
+    }
     const taskAdderOpen = () => setOpen(true);
     const taskAdderClose = () => setOpen(false);
 
@@ -153,13 +157,13 @@ function TaskList() {
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr> 
                             {headers.map((header, idx) => (
-                                <TaskHeader { ...{...header, click:handleSort}}/>
+                                <TaskHeader {...{...header, click:handleSort}}/>
                             ))}
                         </tr>
                     </thead>
                     <tbody>
                         {random_data.map((e,idx) => (
-                            <TaskRow {...e} />
+                           <TaskRow {...{field:e, saveRow: savedRow}}/>
                         ))}
                     </tbody>
                 </table>       
