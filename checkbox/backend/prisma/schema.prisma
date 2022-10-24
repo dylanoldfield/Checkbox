@@ -12,8 +12,8 @@ generator client {
 
 model Task {
   id          String   @id @default(uuid())
-  taskName    String 
-  dueDate     DateTime
+  taskName    String
+  dueDate     DateTime @default(now())
   createdAt   DateTime @default(now())
   description String
   status      String
