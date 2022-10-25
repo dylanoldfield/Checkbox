@@ -1,40 +1,45 @@
 ---
-title: ExpressJS Prisma
-description: An ExpressJS server that uses Prisma to connect to a PostgreSQL database
+title: Railway Backend
+description: This is the backend for our COMP9900 Project, enabled by Flask and Railway
 tags:
-  - express
-  - postgresql
-  - prisma
-  - typescript
+  - python
+  - flask
+  - SQL Alchemy 
+  - Railway
 ---
 
-# ExpressJS Prisma Example
+# COMP9900 Project Backend
 
-This is an [ExpressJS](https://expressjs.com/) REST API that uses [Prisma](https://www.prisma.io/) to connect to a Postgres database and CRUD todos.
-
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/LqCw_O)
+Our backend is implemented on [Railway](https://railway.app) using a [FastAPI](https://fastapi.tiangolo.com/) app server supported by [PyMongo](https://pymongo.readthedocs.io/en/stable/) on a [MongoDB](https://www.mongodb.com/) DB. 
 
 ## ✨ Features
 
-- Prisma
-- Express
-- Postgres
-- TypeScript
+- Python
+- FastAPI
+- PyMongo
+- MongoDB
 
 ## 💁‍♀️ How to use
+### Environment Set Up
+- (Optional) create a Python3 virtual environment in your desired backend location `virtualenv path/to/directory'
+- Clone repo into the environment folder
+- Sign up to [Railway](https://railway.app) using your github 
+- Install the [Railway CLI](https://docs.railway.app/develop/cli) on your OS
+- Link the Project - you can find this link on the project page in Railway under 'Set up your project locally'
+    - Use `railway link <project-link>` in your command line to link it 
+- Install Python requirements `pip install -r requirements.txt`
 
-- Install dependencies `yarn`
-- [Provision a Postgres container on Railway](https://dev.new)
-- Connect to your Railway project with `railway link`
-- Migrate the database `railway run yarn migrate:dev`
-- Run the Server app `railway run yarn dev`
+### Run FastAPI Server Locally 
+- Make sure you are in the  backend folder not the project folder
+- To run the server locally but still access the railway DB you need to use the command: `railway run python -m uvicorn main:app --reload`
+- Go to (http://localhost:8000/docs)
 
-## 📝 Notes
-
-This is a simple REST API for todo items. The available routes are
-
-- `GET /todos` gets all todos
-- `POST /todos` creates a new using `text` in the JSON body
-- `GET /todos/:id` gets a todo by id
-- `PUT /todos/:id` updates a todo by id
-- `DELETE /todos/:id` deletes a todo by id
+### Deploy to Railway
+- Change directory to project source
+- Use `railway up` to deploy it
+    - !!! Make sure to remove the deployment on railway after you are done to save credits !!! 
+        - Click on the COMP9900 deployment in Railway 
+        - Under the Deployments sub-heading, click the 3-dots symbol next to the deployed app 
+        - Click 'Remove Deployment' 
+        
+    

@@ -1,56 +1,13 @@
-import React from 'react';
-import { TaskFields, TaskStatus} from '../components/TaskRow';
-import { SortDirection} from '../components/TaskHeader'
-import TaskRow from '../components/TaskRow'
-import TaskHeader from '../components/TaskHeader';
+import React, { useEffect } from 'react';
+import { TaskFields, TaskStatus} from '../components/Task/TaskRow';
+import { SortDirection} from '../components/Task/TaskHeader'
+import TaskRow from '../components/Task/TaskRow'
+import TaskHeader from '../components/Task/TaskHeader';
 import { useState } from 'react';
 import Modal from '@mui/material/Modal';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
-const random_data = [
-    {
-        'id':'1',
-        'name': 'Dylan', 
-        'description': 'some description',
-        'due_date': new Date(),
-        'create_date': new Date(),
-        'status': TaskStatus.Overdue
-    },
-    {
-        'id':'2',
-        'name': 'Bob', 
-        'description': 'some really slasdslkfjasldkjflkasjd;flkjasd;lkfj;laskdjf;lkajsd;lfkj',
-        'due_date': new Date(),
-        'create_date': new Date(),
-        'status': TaskStatus.Overdue
-    },
-    {
-        'id':'3',
-        'name': 'James', 
-        'description': 'some description',
-        'due_date': new Date(),
-        'create_date': new Date(),
-        'status': TaskStatus.Overdue
-    },
-    {
-        'id':'4',
-        'name': 'Harry', 
-        'description': 'some description',
-        'due_date': new Date(),
-        'create_date': new Date(),
-        'status': TaskStatus.Overdue
-    },
-    {
-        'id':'5',
-        'name': 'Sandy', 
-        'description': 'some description',
-        'due_date': new Date(),
-        'create_date': new Date(),
-        'status': TaskStatus.Overdue
-    }
-
-]
+import {ax} from "../util/axios-setup"
 
 
 const headers = [
@@ -78,19 +35,45 @@ const headers = [
 
 
 function TaskList() {
+    const [tasks, setTasks] = useState([])
     const [open, setOpen] = useState(false)
     const [startDate, setStartDate] = useState(new Date());
+    const [colSorted, setColSorted] = useState({
+        column: "",
+        dir:SortDirection.None
+    });
 
-    const handleSort = (title:string, sortDir: SortDirection) => {
+    const [pageNum, setPageNum] = useState(1)
 
-    }
+   async function getTasks(pageSize: number, pageNum:number, sortField?:string, sortDirection?: SortDirection){
+        return await ax.get('/task/', {
+            params:{
+                pageSize:pageSize,
+                pageNum:pageNum,
+                sortField:sortField,
+                sortDirection:sortDirection
+            }
+        })
+   }
+
+
+   useEffect(() => {
+        if(tasks.length === 0){
+            getTasks(15,pageNum)
+            .then(res => {
+                console.log(res)
+                setTasks(res.data['tasks'])
+            })
+            .catch(err => console.log(err));
+        }
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+   },[])
 
     const savedRow = (data:TaskFields) => {
         console.log('row saved')
     }
     const taskAdderOpen = () => setOpen(true);
     const taskAdderClose = () => setOpen(false);
-
 
     
 
@@ -157,12 +140,12 @@ function TaskList() {
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr> 
                             {headers.map((header, idx) => (
-                                <TaskHeader {...{...header, click:handleSort}}/>
+                                <TaskHeader {...{...header, columnSorted: colSorted, sortedCol:colSorted}} handleClick={setColSorted}/>
                             ))}
                         </tr>
                     </thead>
                     <tbody>
-                        {random_data.map((e,idx) => (
+                        {tasks.map((e,idx) => (
                            <TaskRow {...{field:e, saveRow: savedRow}}/>
                         ))}
                     </tbody>

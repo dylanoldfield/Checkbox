@@ -11,12 +11,12 @@ export enum TaskStatus{
 }
 
 export interface TaskFields {
-    [index: string]: number | string | Date;
+    [index: string]: number | string;
     id:string
-    name: string;
+    task_name: string;
     description: string;
-    due_date: Date;
-    create_date: Date;
+    due_date: string;
+    created_at: string;
     status: TaskStatus;
   }
 
@@ -24,6 +24,10 @@ export interface TaskFields {
     field: TaskFields;
     saveRow: (data:TaskFields) => void;
   };
+
+
+
+
 function TaskRow({field, saveRow}:Props){
     const [fields, setFields] = useState(field);
     const [savedFields,setSavedFields] = useState(field);
@@ -33,7 +37,6 @@ function TaskRow({field, saveRow}:Props){
     useEffect(() => {
         if(!editing && JSON.stringify(savedFields) !== JSON.stringify(fields)){
             setSavedFields(fields)
-            
             saveRow(fields)
         }
       },[editing]);
@@ -48,11 +51,11 @@ function TaskRow({field, saveRow}:Props){
         <td className=" py-4 px-6 name">
         {
            editing ? (
-                <input value={fields.name}
-                        onChange={(event) => setFields((previous) => ({...previous, name: event.target.value}))}
+                <input value={fields.task_name}
+                        onChange={(event) => setFields((previous) => ({...previous, task_name: event.target.value}))}
                 />
             ) : (
-                fields.name
+                fields.task_name
             )
         }
         </td>
@@ -70,20 +73,20 @@ function TaskRow({field, saveRow}:Props){
         <td className="py-4 px-6 due_date">
         {
            editing ? (
-                    <DatePicker className="px-1 border-solid border-2 rounded border-slate-700 text-sm h-7" selected={fields.due_date} onChange={(date:Date) => setFields((previous) => ({...previous, due_date: date}))} />
+                    <DatePicker className="px-1 border-solid border-2 rounded border-slate-700 text-sm h-7" selected={new Date(fields.due_date)} onChange={(date:Date) => setFields((previous) => ({...previous, due_date: date.toDateString()}))} />
             ) : (
-                fields.due_date.toDateString()
+                new Date(fields.due_date).toDateString()
             )
         }
         </td>
         <td className=" py-4 px-6 create_date">
-            {fields.create_date.toDateString()}
+            {new Date(fields.created_at).toDateString()}
         </td>
         <td className="py-4 px-6 status">
             {fields.status}
         </td>
         <td className=" py-4 px-6 button">
-            <a href="#" onClick={()=>{setEditing(!editing)}} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">{editing ? 'Save' : 'Edit'}</a>
+            <button onClick={()=>{setEditing(!editing)}} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">{editing ? 'Save' : 'Edit'}</button>
         </td>
       </tr>
     );
