@@ -36,7 +36,7 @@ A simple task tracker. Client uses [React](https://reactjs.org/) written in [Typ
 
     With up to a 10000s of tasks there are a few things to consider:
     1) Is how much data we are sending: I used pagination to limit the number of results return at a time, this will prevent uncessarily sending MBs of data across.
-    2) How many times we query the DB: As I speak to below another thing that would be useful if I had more time is to use caching on query results. You would cache most of your get query results and run a refresh when any tasks were added to DB.
+    2) How many times we query the DB: As I speak to below another thing that would be useful if I had more time is to use caching on query results. You would cache most of your get query results and run a refresh when any tasks were added to DB. This would also really help intermediate results when searching based on title as I call on each character change.
     3) DB structure: Depending on how many users we had it could be appropriate to have different collections for each user's tasks.
     4) Indexes: I used indexes on due date, created_at and title to speed up searching
     5) Atomic Write Requests: Not batch write requests or updates. This would minimise resource locks.
