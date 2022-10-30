@@ -15,8 +15,7 @@ class Task(BaseModel):
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
     task_name: str = Field(...)
     description: str = Field(...)
-    due_date: str
-    # preferences
+    due_date: str  # This is stored as a string rather than datetime due to pydantic str/datetime swapping
 
     class Config:
         allow_population_by_field_name = True
@@ -31,6 +30,7 @@ class Task(BaseModel):
 
 class TaskInDB(Task):
     created_at: str = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
 
 class TaskReturned(TaskInDB):
     status: StatusEnum
