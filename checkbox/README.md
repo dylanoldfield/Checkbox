@@ -43,16 +43,6 @@ A simple task tracker. Client uses [React](https://reactjs.org/) written in [Typ
 
 ## 💁‍♀️ How to use
 
-### Client Set Up
-
-- Install front end dependencies `npm install`
-
-### Client Running
-
-- Run on `localhost:3000` using `npm start`
-- Build project first `npm build`
-  - Then run on using `serve -s build` on `localhost:3000`
-
 ### Backend Set Up
 
 ### Using Existing Railway Deployment
@@ -83,3 +73,18 @@ A simple task tracker. Client uses [React](https://reactjs.org/) written in [Typ
   - Under `Data`
   - Find tasks in collections and click it
   - delete the collection
+
+### Client Set Up
+
+- Install front end dependencies `npm install`
+
+### Client Running
+
+- By default the client will run against the existing Railway public deployment at "https://checkbox.up.railway.app/" if you want to run it vs your local server set `REACT_APP_ENV=local`
+
+  - Depending on your OS this is how you do it: "https://create-react-app.dev/docs/adding-custom-environment-variables/"
+
+- Run on `localhost:3000` using `npm start` or `REACT_APP_NOT_SECRET_CODE=local npm start`
+- Build project first `npm build`
+  - Then run on using `serve -s build` on `localhost:3000`
+- If you really insist on running the client on a different port, make sure update CORS in `/backend/main.py` to include the domain and then run Railway locally using `REACT_APP_NOT_SECRET_CODE=local npm start` (or windows equiv)
