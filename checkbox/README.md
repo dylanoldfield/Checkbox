@@ -75,3 +75,11 @@ A simple task tracker. Client uses [React](https://reactjs.org/) written in [Typ
 - Make sure you are in the backend folder not the project folder
 - To run the server locally but still access the railway DB you need to use the command: `railway run python -m uvicorn main:app --reload`
 - Go to (http://localhost:8000/docs)
+
+### Cleaning the DB
+
+- Go to project folder in Railway
+- Click MongoDB
+  - Under `Data`
+  - Find tasks in collections and click it
+  - delete the collection
