@@ -70,7 +70,7 @@ function TaskRow({field, saveRow}:Props){
         <td className="py-4 px-6 due_date">
         {
            editing ? (
-                    <DatePicker className="px-1 border-solid border-2 rounded border-slate-700 text-sm h-7" selected={new Date(fields.due_date)} onChange={(date:Date) => updateDate(date)} />
+                    <DatePicker className="px-1 border-solid border-2 rounded border-slate-700 text-sm h-7" selected={new Date(fields.due_date)} onChange={(date:Date) => updateDate(date) } disabledKeyboardNavigation />
             ) : (
                 new Date(fields.due_date).toDateString()
             )

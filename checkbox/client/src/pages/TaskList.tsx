@@ -163,7 +163,7 @@ function TaskList() {
                             </div>
                             <div className="mt-3 col-span-6 bg">
                                 <label htmlFor="task-description" className="block text-sm font-medium text-gray-700">Due Date</label>
-                                <DatePicker className="px-1 border-solid border-2 rounded border-slate-700 text-sm h-7" selected={new Date(modalDueDate)} onChange={(date:Date) => setModalDueDate(date.toISOString())} />
+                                <DatePicker className="px-1 border-solid border-2 rounded border-slate-700 text-sm h-7" selected={new Date(modalDueDate)} onChange={(date:Date) => setModalDueDate(date.toISOString())}  disabledKeyboardNavigation/>
                             </div>
                             </div>
                         </div>
