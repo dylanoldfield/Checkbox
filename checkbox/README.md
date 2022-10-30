@@ -30,7 +30,16 @@ A simple task tracker. Client uses [React](https://reactjs.org/) written in [Typ
 ## Design Choices
 
     - Tailwind: This sometimes divides the crowd but for smaller projects I like inline styling as it provides more control. In a large project some of this could be abstracted to .css files.
-    - No Node? I did begin to write a node backend with prisma on a postgres db (I have included it in 'backend_node') but was running into integration issues with Railway and Prisma so I decided to use Python.
+    - No Node? I did begin to write a node backend with prisma on a postgres db (I have included it in 'backend_node') but was running into integration issues with Railway and Prisma so I decided to use Python
+
+### Key Risk: 10000s Potential Tasks:
+
+    With up to a 10000s of tasks there are a few things to consider:
+    1) Is how much data we are sending: I used pagination to limit the number of results return at a time, this will prevent uncessarily sending MBs of data across.
+    2) How many times we query the DB: As I speak to below another thing that would be useful if I had more time is to use caching on query results. You would cache most of your get query results and run a refresh when any tasks were added to DB.
+    3) DB structure: Depending on how many users we had it could be appropriate to have different collections for each user's tasks.
+    4) Indexes: I used indexes on due date, created_at and title to speed up searching
+    5) Atomic Write Requests: Not batch write requests or updates. This would minimise resource locks.
 
 ## Potential Improvements
 
