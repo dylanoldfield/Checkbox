@@ -52,6 +52,7 @@ A simple task tracker. Client uses [React](https://reactjs.org/) written in [Typ
 
 ### Backend Locally/Railway Access
 
+- Change into backend directory `cd /backend`
 - (Optional) create a Python3 virtual environment in your desired backend location `virtualenv path/to/directory'
 - Install Python requirements `pip install -r requirements.txt`
 - Sign up to [Railway](https://railway.app) using your github
@@ -76,6 +77,7 @@ A simple task tracker. Client uses [React](https://reactjs.org/) written in [Typ
 
 ### Client Set Up
 
+- Change into client directory `cd /client`
 - Install front end dependencies `npm install`
 
 ### Client Running
