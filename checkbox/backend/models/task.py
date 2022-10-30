@@ -15,7 +15,7 @@ class Task(BaseModel):
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
     task_name: str = Field(...)
     description: str = Field(...)
-    due_date: datetime = Field(...)
+    due_date: str
     # preferences
 
     class Config:
@@ -24,14 +24,13 @@ class Task(BaseModel):
             "example": {
                 "task_name": "Checkbox",
                 "description": "This is a demo task for checkbox",
-                "due_date": str(datetime.now()),
+                "due_date": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
             }
         }
 
 
 class TaskInDB(Task):
-    created_at: datetime = datetime.now()
-
+    created_at: str = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
 class TaskReturned(TaskInDB):
     status: StatusEnum
@@ -45,7 +44,7 @@ class TasksWithCount(BaseModel):
 class TaskUpdate(BaseModel):
     task_name: str = Field(...)
     description: str = Field(...)
-    due_date: datetime = Field(...)
+    due_date: str = Field(...)
 
     class Config:
         allow_population_by_field_name = True
@@ -53,7 +52,7 @@ class TaskUpdate(BaseModel):
             "example": {
                 "task_name": "Checkbox",
                 "description": "This is a demo task for checkbox",
-                "due_date": str(datetime.now()),
+                "due_date": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
             }
         }
 
@@ -79,7 +78,7 @@ class SortObjects(BaseModel):
 
 def calculate_status(task: TaskInDB):
     new_task = task
-    due_date = datetime.strptime(task['due_date'], "%Y-%m-%dT%H:%M:%S.%f")
+    due_date = datetime.strptime(task['due_date'], "%Y-%m-%dT%H:%M:%S.%fZ")
     if due_date < datetime.now():
         new_task['status'] = StatusEnum.overdue
     elif due_date > datetime.now() and due_date < datetime.now() + timedelta(days=7):

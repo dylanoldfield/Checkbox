@@ -1,5 +1,6 @@
+from datetime import datetime
 from math import ceil
-from models.task import Task, TaskReturned, TaskUpdate, calculate_status, TasksWithCount, SortObjects, SortableFields, SortDirection
+from models.task import Task, TaskInDB, TaskReturned, TaskUpdate, calculate_status, TasksWithCount, SortObjects, SortableFields, SortDirection
 from fastapi import APIRouter, Body, Request, Response, HTTPException, status, Depends
 from fastapi.encoders import jsonable_encoder
 from typing import Union
@@ -9,7 +10,7 @@ router = APIRouter()
 
 
 @router.get("/", response_description="Get Tasks", response_model=TasksWithCount)
-def list_tasks(pageSize: int, pageNum: int, request: Request, sortField: Union[SortableFields, None] = None, sortDirection: Union[SortDirection, None] = 1):
+def list_tasks(pageSize: int, pageNum: int, request: Request, sortField: Union[SortableFields, None] = None, sortDirection: Union[SortDirection, None] = 1, title: Union[str, None] = None ):
     if pageSize < 1 or pageNum < 1:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail=f"Page Size and Page Num must be at least 1")
@@ -19,13 +20,15 @@ def list_tasks(pageSize: int, pageNum: int, request: Request, sortField: Union[S
     if sortDirection is not None and sortField is not None:
         print("made it here")
         tasks = list(request.app.database["tasks"].find(
+            {"$text": {"$search": title}} if title is not None else {},
             skip=(pageNum-1)*pageSize, limit=pageSize).sort([(sortField, sortDirection)]))
     else:
         tasks = list(request.app.database["tasks"].find(
+            {"$text": {"$search": title}} if title is not None else {},
             skip=(pageNum-1)*pageSize, limit=pageSize))
     tasks = list(map(calculate_status, tasks))
     doc_count = ceil(
-        request.app.database["tasks"].count_documents({})/pageSize)
+        request.app.database["tasks"].count_documents({"$text": {"$search": title}} if title is not None else {})/pageSize)
     return {'doc_count': doc_count, 'tasks': tasks}
 
 
@@ -66,8 +69,15 @@ def list_tasks(pageSize: int, pageNum: int, request: Request, sortFields: SortOb
 
 @router.post("/", response_description="Create a new task", status_code=status.HTTP_201_CREATED,
              response_model=TaskReturned)
-def create_task(request: Request, task: Task = Body(...)):
+def create_task(request: Request, task: TaskInDB = Body(...)):
     task = jsonable_encoder(task)
+
+    try:
+        test = datetime.strptime(task['due_date'], "%Y-%m-%dT%H:%M:%S.%fZ")
+    except ValueError:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                        detail=f"due date needs to be in the following format %Y-%m-%dT%H:%M:%S.%fZ")
+
     new_task = request.app.database["tasks"].insert_one(task)
     created_task = request.app.database["tasks"].find_one(
         {"_id": new_task.inserted_id}
@@ -82,6 +92,13 @@ def create_task(request: Request, task: Task = Body(...)):
             response_model=TaskReturned)
 def update_task(id: str, request: Request, task: TaskUpdate = Body(...)):
     task = jsonable_encoder(task)
+    
+    if task['due_date'] is not None:
+        try:
+            test = datetime.strptime(task['due_date'], "%Y-%m-%dT%H:%M:%S.%fZ")
+        except ValueError:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail=f"due date needs to be in the following format %Y-%m-%dT%H:%M:%S.%fZ")
     if len(task) >= 1:
         updated_task = request.app.database["tasks"].find_one_and_update(
             {"_id": id}, {"$set": task}, return_document=ReturnDocument.AFTER
